@@ -3,7 +3,7 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Install system dependencies (ffmpeg is required by pydub/audio processing)
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -o Acquire::ForceIPv4=true && apt-get install -y --no-install-recommends \
     ffmpeg \
     libpq-dev \
     gcc \
