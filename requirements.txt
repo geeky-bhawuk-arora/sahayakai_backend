@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+chromadb
+sentence-transformers
+SpeechRecognition
+gTTS
+pydub
+python-multipart
+pydantic
+openai

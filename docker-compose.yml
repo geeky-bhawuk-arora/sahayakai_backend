@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: sahayak
+      POSTGRES_PASSWORD: sahayak_pass
+      POSTGRES_DB: sahayakdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sahayak -d sahayakdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # We setup the app to depend on the db being healthy
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "postgresql://sahayak:sahayak_pass@db:5432/sahayakdb"
+    volumes:
+      # Optional: Share chromadb between runs so seed_db doesn't re-embed 150 items every time
+      - ./chroma_db:/app/chroma_db
+      - ./audio_outputs:/app/audio_outputs
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
